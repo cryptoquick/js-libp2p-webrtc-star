@@ -46,12 +46,12 @@
   },
   "homepage": "https://github.com/libp2p/js-libp2p-webrtc-star#readme",
   "devDependencies": {
-    "aegir": "^18.0.3",
+    "aegir": "git+https://github.com/cryptoquick/aegir.git#4721fc5b987f9a204827187b2aec393fe546528b",
     "chai": "^4.2.0",
     "dirty-chai": "^2.0.1",
     "electron-webrtc": "~0.3.0",
     "prom-client": "^11.2.0",
-    "wrtc": "~0.1.6"
+    "wrtc": "^0.3.5"
   },
   "dependencies": {
     "async": "^2.6.1",
