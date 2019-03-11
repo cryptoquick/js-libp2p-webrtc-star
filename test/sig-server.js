@@ -33,14 +33,12 @@ describe('signalling', () => {
   let c3mh = multiaddr(base('QmcgpsyWgH8Y8ajJz1Cu72KnS5uo2Aa2LpzU7kinSoooo3'))
   let c4mh = multiaddr(base('QmcgpsyWgH8Y8ajJz1Cu72KnS5uo2Aa2LpzU7kinSoooo4'))
 
-  it('start and stop signalling server (default port)', (done) => {
-    sigServer.start((err, server) => {
-      expect(err).to.not.exist()
-      expect(server.info.port).to.equal(13579)
-      expect(server.info.protocol).to.equal('http')
-      expect(server.info.address).to.equal('0.0.0.0')
-      server.stop(done)
-    })
+  it('start and stop signalling server (default port)', async () => {
+    const server = await sigServer.start()
+    expect(server.info.port).to.equal(13579)
+    expect(server.info.protocol).to.equal('http')
+    expect(server.info.address).to.equal('0.0.0.0')
+    await server.stop()
   })
 
   it('start and stop signalling server (default port) and spam it with invalid requests', (done) => {
@@ -55,24 +53,25 @@ describe('signalling', () => {
         cl.emit('ss-handshake', 1)
         cl.emit('ss-handshake', [1, 2, 3])
         cl.emit('ss-handshake', {})
-        setTimeout(() => {
-          server.stop(done)
+        setTimeout(async () => {
+          server.stop()
+          done()
         }, 1000)
       })
     })
   })
 
-  it('start and stop signalling server (custom port)', (done) => {
+  it('start and stop signalling server (custom port)', async () => {
     const options = {
       port: 12345
     }
-    sigServer.start(options, (err, server) => {
-      expect(err).to.not.exist()
-      expect(server.info.port).to.equal(12345)
-      expect(server.info.protocol).to.equal('http')
-      expect(server.info.address).to.equal('0.0.0.0')
-      server.stop(done)
-    })
+    const server = await sigServer.start(options)
+
+    expect(server.info.port).to.equal(12345)
+    expect(server.info.protocol).to.equal('http')
+    expect(server.info.address).to.equal('0.0.0.0')
+
+    await server.stop()
   })
 
   it('start signalling server for client tests', (done) => {
@@ -111,8 +110,10 @@ describe('signalling', () => {
     c3.on('connect', connected)
     c4.on('connect', connected)
 
-    function connected () {
-      if (++count === 3) { done() }
+    function connected() {
+      if (++count === 3) {
+        done()
+      }
     }
   })
 
@@ -206,7 +207,7 @@ describe('signalling', () => {
       check()
     })
 
-    function check () {
+    function check() {
       if (++peersEmitted === 2) {
         done()
       }
@@ -223,8 +224,9 @@ describe('signalling', () => {
         c2.disconnect()
         cb()
       }
-    ], () => {
-      sigS.stop(done)
+    ], async () => {
+      await sigS.stop()
+      done()
     })
   })
 })
