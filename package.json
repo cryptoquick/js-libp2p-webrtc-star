@@ -25,7 +25,6 @@
     "coverage-publish": "aegir coverage --provider coveralls"
   },
   "pre-push": [
-    "lint",
     "test"
   ],
   "engines": {
